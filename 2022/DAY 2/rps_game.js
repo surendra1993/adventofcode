@@ -6,6 +6,8 @@ fs.readFile('input.txt', 'utf-8', (err, data) => {
 
     rounds = data.toString().split('\n');
     console.log(rounds);
+    opponent_score = 0;
+    player_score = 0;
 
    for(round of rounds){
         opponent = map_input(round[0]);
@@ -16,9 +18,29 @@ fs.readFile('input.txt', 'utf-8', (err, data) => {
 
         win = evaluate_winner(opponent, player);
         console.log(win)
-        break;
-
+        if(opponent == player){
+            // Match DRAW
+            player_shape_points = get_points_from_shape(player);
+            console.log(player_shape_points, "player_shape_points")
+            console.log(player_score, "player_score")
+            player_score = player_score + player_shape_points + 3;
+            continue;
+        }
+        if(opponent == win){
+            // Opponent win
+            player_shape_points = get_points_from_shape(player);
+            player_score = player_score + player_shape_points + 0;
+        }
+        else{
+            // Player Win
+            player_shape_points = get_points_from_shape(player);
+            player_score = player_score + player_shape_points + 6;
+        }
+        console.log(player_score, "Player score")
+        console.log("--------------------------------------------")
    }
+
+   console.log(player_score);
 
 })
 
@@ -62,4 +84,19 @@ function evaluate_winner(opponent, player){
     if(opponent == "PAPER" && player == "SCISSORS" || opponent == "SCISSORS" && player == "PAPER"){
         return "SCISSORS";
     }
+}
+
+function get_points_from_shape(shape){
+    switch(shape){
+        case 'ROCK':
+            point = 1;
+            break;
+        case 'PAPER':
+            point = 2;
+            break;
+        case 'SCISSORS':
+            point = 3;
+    }
+
+    return point;
 }
